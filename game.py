@@ -17,6 +17,8 @@ BLUE = (0, 100, 255)
 DARK_BLUE = (0, 70, 200)
 GRAY = (100, 100, 100)
 
+# STEP 1: The first step was to get a basic window up and running with a title. 
+# This involved initializing pygame, setting the screen dimensions, and creating a display surface.
 # Screen setup
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 pygame.display.set_caption("RUN AWAY")
