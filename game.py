@@ -84,7 +84,7 @@ player_y = SCREEN_HEIGHT // 2 + 100
 # Enemy variables (spiky black follower)
 enemy_size = 26
 enemy_color = BLACK
-enemy_speed = 2
+enemy_speed = 1.5
 enemy_x = SCREEN_WIDTH // 2 - 200
 enemy_y = SCREEN_HEIGHT // 2 - 150
 
