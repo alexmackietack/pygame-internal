@@ -2,6 +2,7 @@ import math
 import pygame
 import random
 import sys
+from button import Button
 
 # Initialize pygame 
 pygame.init()
@@ -37,35 +38,10 @@ GAME_STATE_PLAYING = 1
 GAME_STATE_GAME_OVER = 2
 GAME_STATE_WON = 3
 
-# Button class for start and restart
-class Button:
-    def __init__(self, x, y, width, height, text, color, hover_color):
-        self.rect = pygame.Rect(x, y, width, height)
-        self.text = text
-        self.color = color
-        self.hover_color = hover_color
-        self.is_hovered = False
-    
-    def draw(self, surface):
-        # Change color if hovered
-        current_color = self.hover_color if self.is_hovered else self.color
-        pygame.draw.rect(surface, current_color, self.rect)
-        pygame.draw.rect(surface, BLACK, self.rect, 2)  # Border
-        
-        # Draw text
-        text_surface = button_font.render(self.text, True, BLACK)
-        text_rect = text_surface.get_rect(center=self.rect.center)
-        surface.blit(text_surface, text_rect)
-    
-    def update(self, mouse_pos):
-        self.is_hovered = self.rect.collidepoint(mouse_pos)
-    
-    def is_clicked(self, mouse_pos, mouse_clicked):
-        return self.rect.collidepoint(mouse_pos) and mouse_clicked
 
 # Create start and restart buttons
-start_button = Button(SCREEN_WIDTH // 2 - 100, SCREEN_HEIGHT // 2 + 50, 200, 60, "START", BLUE, DARK_BLUE)
-restart_button = Button(SCREEN_WIDTH // 2 - 100, SCREEN_HEIGHT // 2 + 50, 200, 60, "RESTART", BLUE, DARK_BLUE)
+start_button = Button(SCREEN_WIDTH // 2 - 100, SCREEN_HEIGHT // 2 + 50, 200, 60, "START", BLUE, DARK_BLUE, button_font, WHITE)
+restart_button = Button(SCREEN_WIDTH // 2 - 100, SCREEN_HEIGHT // 2 + 50, 200, 60, "RESTART", BLUE, DARK_BLUE, button_font, WHITE)
 
 # Main game state vriable
 current_state = GAME_STATE_START
@@ -84,12 +60,12 @@ player_y = SCREEN_HEIGHT // 2 + 100
 # Enemy variables (spiky black follower)
 enemy_size = 26
 enemy_color = BLACK
-enemy_speed = 1.5
+enemy_speed = 0.5
 enemy_x = SCREEN_WIDTH // 2 - 200
 enemy_y = SCREEN_HEIGHT // 2 - 150
 
 # Powerup variables
-enemy_speed_increase_interval = 10000  # ms
+enemy_speed_increase_interval = 1000000  # ms
 powerup_spawn_interval = 10000  # ms
 last_powerup_time = 0
 powerups = []  # {'type': 'speed', 'medkit', or 'gun', 'x': x, 'y': y}
@@ -244,11 +220,11 @@ while running:
                 last_shot_time = now
                 # shoot in mouse direction
                 mx, my = mouse_pos
-                bx, by = player_x, player_y
-                angle = math.atan2(my - by, mx - bx)
+                bullet_x, bullet_y = player_x, player_y
+                angle = math.atan2(my - bullet_y, mx - bullet_x)
                 bullets.append({
-                    "x": bx,
-                    "y": by,
+                    "x": bullet_x,
+                    "y": bullet_y,
                     "dx": math.cos(angle) * bullet_speed,
                     "dy": math.sin(angle) * bullet_speed,
                 })
@@ -274,12 +250,12 @@ while running:
         # Boss behavior
         if boss_active:
             # Boss follows player slowly
-            bx = player_x - boss_x
-            by = player_y - boss_y
-            bdist = math.hypot(bx, by)
-            if bdist > 0:
-                boss_x += (bx / bdist) * boss_speed
-                boss_y += (by / bdist) * boss_speed
+            boss_dx = player_x - boss_x
+            boss_dy = player_y - boss_y
+            boss_distance = math.hypot(boss_dx, boss_dy)
+            if boss_distance > 0:
+                boss_x += (boss_dx / boss_distance) * boss_speed
+                boss_y += (boss_dy / boss_distance) * boss_speed
             
             # Boss shoots projectiles at player
             now = pygame.time.get_ticks()
@@ -377,11 +353,11 @@ while running:
                 last_shot_time = now
                 # shoot in mouse direction
                 mx, my = mouse_pos
-                bx, by = player_x, player_y
-                angle = math.atan2(my - by, mx - bx)
+                bullet_x, bullet_y = player_x, player_y
+                angle = math.atan2(my - bullet_y, mx - bullet_x)
                 bullets.append({
-                    "x": bx,
-                    "y": by,
+                    "x": bullet_x,
+                    "y": bullet_y,
                     "dx": math.cos(angle) * bullet_speed,
                     "dy": math.sin(angle) * bullet_speed,
                 })
@@ -407,12 +383,12 @@ while running:
         # Boss behavior
         if boss_active:
             # Boss follows player slowly
-            bx = player_x - boss_x
-            by = player_y - boss_y
-            bdist = math.hypot(bx, by)
-            if bdist > 0:
-                boss_x += (bx / bdist) * boss_speed
-                boss_y += (by / bdist) * boss_speed
+            boss_dx = player_x - boss_x
+            boss_dy = player_y - boss_y
+            boss_distance = math.hypot(boss_dx, boss_dy)
+            if boss_distance > 0:
+                boss_x += (boss_dx / boss_distance) * boss_speed
+                boss_y += (boss_dy / boss_distance) * boss_speed
             
             # Boss shoots projectiles at player
             now = pygame.time.get_ticks()
