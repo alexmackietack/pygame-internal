@@ -84,7 +84,7 @@ last_shot_time = 0
 bullets = []  # {'x', 'y', 'dx', 'dy'}
 
 # Enemy health for win condition
-enemy_health = 5
+enemy_health = 3
 
 # Boss variables
 boss_active = False
